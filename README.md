@@ -65,14 +65,14 @@ py-pw-sprint/
 └── logs/                      ← 日誌
 ```
 
-## 學習筆記
+## 學習筆記重點 & 總結
 
-10 天衝刺學習計畫，每天 2 小時，詳細筆記放在 `notes/` 目錄：
+10 天衝刺學習計畫，每天 2 小時，核心學習重點 & 筆記放在 `notes/` 目錄：
 
 | Day | 主題 | 筆記 | 狀態 |
 |-----|------|------|------|
-| 0 | 環境建置 + JS ↔ Python 對照 | [day00-setup](notes/day00-setup.md) | ⬜ |
-| 1 | pytest 入門 (discovery, assert, markers) | [day01-pytest-basics](notes/day01-pytest-basics.md) | ⬜ |
+| 0 | 環境建置 + JS ↔ Python 對照 | [day00-setup](notes/day00-setup.md) | ✅ |
+| 1 | pytest 入門 (discovery, assert, markers) | [day01-pytest-basics](notes/day01-pytest-basics.md) | ✅ |
 | 2 | Fixtures & Parametrize | [day02-fixtures-parametrize](notes/day02-fixtures-parametrize.md) | ⬜ |
 | 3 | Playwright 基礎 (locator, expect, trace) | [day03-playwright-basics](notes/day03-playwright-basics.md) | ⬜ |
 | 4 | POM + 等待策略 + 網路攔截 | [day04-pom](notes/day04-pom.md) | ⬜ |

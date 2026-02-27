@@ -4,10 +4,10 @@
 
 ## 學習目標
 
-- [ ] 理解 pytest 的自動發現機制（test discovery）
-- [ ] 撰寫基礎 test function 與使用 `assert`
-- [ ] 使用 `pytest.mark` 進行測試分類
-- [ ] 理解測試執行指令與常用 flags
+- [x] 理解 pytest 的自動發現機制（test discovery）
+- [x] 撰寫基礎 test function 與使用 `assert`
+- [x] 使用 `pytest.mark` 進行測試分類
+- [x] 理解測試執行指令與常用 flags
 
 ## 核心知識點
 
@@ -124,3 +124,9 @@ def test_key_error():
 pytest tests/test_day1_basics.py -v  # 全部 PASSED
 pytest tests/test_day1_basics.py -m smoke -v  # 只跑 smoke 標記的測試
 ```
+
+## 今日總結
+- 自動化測試都有相似的設計邏輯, 包含：
+  - 設定指定檔案路徑存放測試
+  - 需符合特定的檔案名稱 & function 名稱規範
+  - 測試標記 (tag) & 參數化執行 (限縮範圍)
