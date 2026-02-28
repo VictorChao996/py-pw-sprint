@@ -4,10 +4,10 @@
 
 ## 學習目標
 
-- [ ] 理解 fixture 作為「依賴注入」的核心概念
-- [ ] 使用不同 scope 的 fixture（function / class / module / session）
-- [ ] 使用 `@pytest.mark.parametrize` 實現資料驅動測試
-- [ ] 建立 `conftest.py` 共享 fixture
+- [x] 理解 fixture 作為「依賴注入」的核心概念
+- [x] 使用不同 scope 的 fixture（function / class / module / session）
+- [x] 使用 `@pytest.mark.parametrize` 實現資料驅動測試
+- [x] 建立 `conftest.py` 共享 fixture
 
 ## 核心知識點
 
@@ -130,9 +130,37 @@ def test_browser_is_supported(browser_name):
 > - 寫至少 3 個 parametrize 測試（涵蓋單參數、多參數）
 > - 使用 `pytest --fixtures` 查看所有可用 fixture
 
+### 參考情境：電商折扣計算引擎
+
+待測模組：`utils/pricing.py`，包含三個函式：
+
+| 函式 | 功能 |
+|------|------|
+| `calculate_discount(price, role)` | 根據會員等級算折扣（VIP 8 折、member 9 折、guest 原價） |
+| `calculate_shipping(weight_kg, region)` | 根據重量 & 地區算運費（超過 5kg 每公斤加 20） |
+| `build_order(items, role, region)` | 組合完整訂單（小計 → 折扣 → 運費 → 總金額） |
+
+**`conftest.py` 要建立的 3 個 fixture：**
+
+| Fixture | Scope | 用途 | 為什麼選這個 scope |
+|---------|-------|------|---------------------|
+| `product_catalog` | session | 商品清單（模擬 DB 載入） | 商品資料不變，整個 session 只需載入一次 |
+| `sample_cart` | module | 從 catalog 挑幾個商品組成購物車 | 同一測試檔共用同一組購物車資料 |
+| `order` | function | 用 `build_order()` 產生訂單 | 每個測試要乾淨的訂單，避免互相污染 |
+
+三個都用 `yield`，teardown 時印出清理訊息，用 `pytest -s` 觀察生命週期。
+
+**`tests/test_day2_fixtures.py` 的 parametrize 測試：**
+
+| 測試函式 | Parametrize 類型 | 驗證目標 |
+|---------|-----------------|----------|
+| `test_discount_by_role` | 多參數 `(role, expected_rate)` | VIP/member/guest 各自的折扣結果 |
+| `test_shipping_by_region` | 多參數 `(region, weight, expected)` | 各地區運費 + 超重加價邏輯 |
+| `test_order_total` | 搭配 fixture | 用 conftest 的 fixture 驗證訂單總金額正確 |
+
 ## 完成標準
 
 ```bash
 pytest tests/test_day2_fixtures.py -v -s  # 觀察 fixture setup/teardown 順序
-pytest tests/test_day2_fixtures.py -v -k "square"  # 用 -k 過濾測試名稱
+pytest tests/test_day2_fixtures.py -v -k "shipping"  # 用 -k 過濾測試名稱
 ```
