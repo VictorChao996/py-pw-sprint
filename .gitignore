@@ -11,6 +11,7 @@ screenshots/
 logs/
 test-results/
 *.db
+allure-results/
 
 # IDE
 .vscode/

@@ -7,6 +7,7 @@
 - [ ] 設計多環境設定管理（dev / staging / prod）
 - [ ] 整合 logging 機制
 - [ ] 產出 HTML 測試報告
+- [ ] 設定 Allure Report history/trending
 - [ ] 建立自定義 pytest plugin / hook
 
 ## 核心知識點
@@ -129,25 +130,50 @@ class LoginPage:
 ### 7.3 HTML 測試報告
 
 ```bash
-# pytest-html 產出報告
+# pytest-html 產出報告（簡易版）
 pytest tests/ --html=reports/report.html --self-contained-html
-
-# 也可以在 pytest.ini 設定預設值
 ```
 
-```ini
-# pytest.ini
-[pytest]
-addopts = -v --tb=short
-markers =
-    smoke: Smoke tests
-    regression: Regression tests
-    api: API tests
-    ui: UI tests
-testpaths = tests
+### 7.4 Allure Report — History & Trending
+
+Day 0 已完成 Allure 基礎安裝，這裡實作 **history/trending** 讓報告能顯示歷史趨勢。
+
+```bash
+# 建立 Allure 報告執行腳本
 ```
 
-### 7.4 自定義 Fixture — 截圖失敗時自動儲存
+```python
+# scripts/run_with_allure.sh
+#!/bin/bash
+
+# 1. 保留上一次的 history（讓趨勢圖有資料）
+if [ -d "allure-report/history" ]; then
+    cp -r allure-report/history allure-results/history
+fi
+
+# 2. 執行測試（allure-results 由 pytest.ini 自動產出）
+pytest tests/ "$@"
+
+# 3. 產出報告（含歷史趨勢）
+allure generate allure-results -o allure-report --clean
+
+# 4. 開啟報告
+allure open allure-report
+```
+
+```bash
+# 使用方式
+chmod +x scripts/run_with_allure.sh
+./scripts/run_with_allure.sh                    # 跑全部測試
+./scripts/run_with_allure.sh -m smoke           # 只跑 smoke
+./scripts/run_with_allure.sh tests/ui/ --headed # 指定目錄
+```
+
+> **重點**：每次跑測試前把 `allure-report/history/` 複製回 `allure-results/history/`，
+> Allure 產報告時就會讀取歷史資料，顯示通過率趨勢、持續時間變化等圖表。
+> 在 CI/CD 中，通常用 artifact 保存 `history/` 目錄來達成同樣效果。
+
+### 7.5 自定義 Fixture — 截圖失敗時自動儲存
 
 ```python
 # conftest.py
@@ -178,11 +204,13 @@ def pytest_runtest_makereport(item, call):
 > 3. 設定 `pytest.ini`，包含 markers 和預設選項
 > 4. 讓失敗截圖自動儲存功能生效
 > 5. 產出一份 HTML 報告
+> 6. 建立 `scripts/run_with_allure.sh`，執行 2 次以上確認趨勢圖有資料
 
 ## 完成標準
 
 ```bash
-pytest tests/ --html=reports/report.html -v  # 產出報告
+pytest tests/ --html=reports/report.html -v  # 產出 pytest-html 報告
 ls reports/report.html  # 確認報告存在
 ls logs/test.log  # 確認日誌存在
+./scripts/run_with_allure.sh -m smoke  # Allure 報告含歷史趨勢
 ```

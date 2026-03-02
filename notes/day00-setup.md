@@ -15,9 +15,14 @@ source .venv/bin/activate  # macOS / Linux
 
 # 3. 安裝核心套件
 pip install pytest playwright requests pytest-playwright pytest-html httpx pydantic
+pip install allure-pytest           # Allure 報告整合
 playwright install  # 下載瀏覽器引擎 (Chromium, Firefox, WebKit)
 
-# 4. 驗證安裝
+# 4. 安裝 Allure CLI（用來檢視報告）
+brew install allure
+allure --version  # 驗證安裝
+
+# 5. 驗證安裝
 pytest --version
 python -c "from playwright.sync_api import sync_playwright; print('Playwright OK')"
 ```
@@ -38,6 +43,22 @@ py-pw-sprint/
 ├── utils/                    ← 工具函式
 └── config/                   ← 設定管理
 ```
+
+## Allure Report 基礎設定
+
+pytest.ini 加入 `--alluredir=allure-results`，之後每次 `pytest` 自動產出報告資料：
+
+```ini
+[pytest]
+addopts = -v --tb=short --tracing retain-on-failure --alluredir=allure-results
+```
+
+```bash
+# 跑完測試後，開啟報告
+allure serve allure-results
+```
+
+> Allure history/trending 進階功能會在 Day 7（框架設計）實作。
 
 ## Node.js ↔ Python 快速對照（給有 JS 背景的你）
 
