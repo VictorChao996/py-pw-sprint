@@ -4,10 +4,10 @@
 
 ## 學習目標
 
-- [ ] 理解 Page Object Model 的設計原則
-- [ ] 在 Python 中實作 POM
-- [ ] 處理等待策略與網路攔截
-- [ ] 使用 Playwright 的 codegen 工具加速開發
+- [x] 理解 Page Object Model 的設計原則
+- [x] 在 Python 中實作 POM
+- [x] 處理等待策略與~~網路攔截~~
+- [x] 使用 Playwright 的 codegen 工具加速開發
 
 ## 核心知識點
 
@@ -136,8 +136,27 @@ playwright codegen --device "iPhone 13" https://example.com
 > **練習 4**：
 > 1. 在 `pages/` 建立至少 2 個 Page Object（LoginPage 已有，再加一個）
 > 2. 在 `tests/ui/test_day4_pom.py` 中用 POM 撰寫測試
-> 3. 使用 `playwright codegen` 產生程式碼，再重構為 POM 模式
-> 4. 嘗試 `page.route()` 攔截一個 API 請求
+
+### 情境練習
+
+以下情境皆使用 `https://the-internet.herokuapp.com`，對應今日四個知識點：
+
+#### 情境 A：POM 封裝（對應 4.1）
+> 建立 `pages/login_page.py`，將 Day 3 的 login 測試重構為 POM 模式：
+> - LoginPage class 包含：`navigate()`、`login(username, password)`、`expect_success()`、`expect_error(text)`
+> - 所有 locator 集中在 `__init__` 中管理
+> - 測試檔中不應出現任何 `page.locator()` 或 `page.get_by_*()` 呼叫
+
+#### 情境 B：DynamicLoadingPage + 等待元素顯示（對應 4.1 + 4.2）
+> 建立 `pages/dynamic_loading_page.py`，封裝 `/dynamic_loading/1` 頁面：
+> - `start()` — 點擊 Start 按鈕
+> - `wait_for_result()` — 使用 `.wait_for(state="visible")` 等待結果出現
+> - `expect_result_text(text)` — 使用 `expect().to_have_text()` 驗證結果
+> - 測試：點擊 Start → 等待載入 → 斷言文字為 `"Hello World!"`
+> - 重點：這個頁面是純前端 JS 動畫，沒有 AJAX 請求，只需等元素狀態變化
+
+### 備註
+1. 網路攔截將在未來的天數 (day 8)中練習, 會比較自然的符合情境練習
 
 ## 完成標準
 
@@ -145,3 +164,15 @@ playwright codegen --device "iPhone 13" https://example.com
 pytest tests/ui/test_day4_pom.py -v --headed
 # 測試程式碼中沒有直接出現 CSS selector，全部透過 POM 封裝
 ```
+
+
+## 今日總結
+1. Page Object Model (POM) 是一種設計模式, 能讓**網頁元素 & 操作**從**測試邏輯**中抽離
+  - POM 封裝網頁元素, 讓測試可以專注元素運作邏輯 （而非選取元素）
+    - 當相同測試使用到的網頁元素改變時, 只需要更改 POM 內即可, 避免 copy-paste 的大量後續修正
+  - POM 封裝網頁相關操作, 也進一步讓測試看起來比較簡潔
+    - 需注意不要過度封裝或過於細節的封裝, 不然會遇到難以擴充的問題
+2. 實務上 POM 可能會發展成: BasePage, LoginPage, Test Case 的三層架構
+   1. BasePage：放置頁面通用方法
+   2. LoginPage; 具體頁面, 繼承 BasePage, 再加入專屬 property
+   3. Test Case: 呼叫上述具體頁面進行測試

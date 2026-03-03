@@ -166,6 +166,8 @@ class UserFactory:
 > 2. 建立 `utils/db.py`，實作 SQLite 查詢工具
 > 3. 寫 2-3 個 SQL 驗證測試
 > 4. 建立 `utils/test_data.py`，實作 Factory Pattern
+> 5. 使用 `page.route()` 攔截 API 回應，Mock 不同資料後驗證 UI 顯示（延續 Day 4 的 4.3 網路攔截概念）
+> 6. 使用 `with page.expect_response()` 監聽 UI 操作觸發的 API 請求，驗證請求是否正確發出
 
 ## 完成標準
 
