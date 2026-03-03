@@ -164,3 +164,11 @@ def test_browser_is_supported(browser_name):
 pytest tests/test_day2_fixtures.py -v -s  # 觀察 fixture setup/teardown 順序
 pytest tests/test_day2_fixtures.py -v -k "shipping"  # 用 -k 過濾測試名稱
 ```
+
+## 今日總結
+- pytest 使用 python decorator 來輔助標示 (ex. fixture, mark 等等)
+- 標示為 fixture 的 function 可以被其他 pytest test 當作參數復用
+  - 使用時需要像 function 一樣 import
+  - 或是將該 fixture function 放置在 conftest.py 中 （就不需要 import 指名）
+- pytest.mark.parametrize() 能夠以 decorator 參數的方式帶入 test function 中 (且會被視為不同的 test 單位)
+  - 除了寫死外也能夠以匯入的方式傳入參數陣列

@@ -4,10 +4,10 @@
 
 ## 學習目標
 
-- [ ] 使用 `pytest-playwright` 的內建 fixture（`page`, `browser`, `context`）
-- [ ] 掌握 Locator 策略（role, text, CSS, test-id）
-- [ ] 使用 Playwright 的 `expect` 斷言 API
-- [ ] 截圖與追蹤（trace）功能
+- [x] 使用 `pytest-playwright` 的內建 fixture（`page`, `browser`, `context`）
+- [x] 掌握 Locator 策略（role, text, CSS, test-id）
+- [x] 使用 Playwright 的 `expect` 斷言 API
+- [x] 截圖與追蹤（trace）功能
 
 ## 核心知識點
 
@@ -65,7 +65,7 @@ def test_login_flow(page):
     # 點擊按鈕
     page.get_by_role("button", name="Login").click()
 
-    # 斷言 — 使用 Playwright 的 expect（自帶等待機制）
+    # 斷言 — 使用 Playwright 的 Web-First Assertions（自動重試直到條件成立或 timeout）
     expect(page).to_have_url("https://the-internet.herokuapp.com/secure")
     expect(page.get_by_text("You logged into a secure area!")).to_be_visible()
 ```
@@ -128,3 +128,18 @@ pytest --browser chromium --browser firefox
 pytest tests/ui/test_day3_playwright_basics.py -v --headed  # headed 模式觀察執行
 pytest tests/ui/test_day3_playwright_basics.py -v --tracing on  # 產出 trace
 ```
+
+## 今日總結
+- pytest-playwright 是 pytest 的一個插件, 支援 playwright 物件以 fixture 的方式在 test 中使用
+  - 本質上還是 pytest, 過去的測試編寫以及執行邏輯不變 (ex. 檔案命名、function 命名、pytest decorator)
+  - 多了瀏覽器控制 & 操作相關 API
+- 使用 playwright expect 的好處為自動等待機制, pytest-playwright 提供的 fixture (page, browser, context) 以及獲取的網頁 element 都能應用自動等待機制。
+  - 自動重試直到條件成立 or timeout
+- playwright 提供幾種常見獲取元素的方法, 從上到下推薦優先使用：
+  - .get_by_role() - 依 ARIA role 定位
+  - .get_by_label() - 依 label 文字定位表單欄位
+  - .locator()
+    - `#` — id
+    - `.` — class
+    - `[]` — attribute（例如 `[data-testid="login"]`）
+    - `xpath=` — XPath（最後手段）
