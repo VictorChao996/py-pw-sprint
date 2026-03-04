@@ -76,7 +76,7 @@ py-pw-sprint/
 | 2 | Fixtures & Parametrize | [day02-fixtures-parametrize](notes/day02-fixtures-parametrize.md) | ✅ |
 | 3 | Playwright 基礎 (locator, expect, trace) | [day03-playwright-basics](notes/day03-playwright-basics.md) | ✅ |
 | 4 | POM + 等待策略 + 網路攔截 | [day04-pom](notes/day04-pom.md) | ✅ |
-| 5 | API 測試 (requests + Pydantic schema) | [day05-api-basics](notes/day05-api-basics.md) | ⬜ |
+| 5 | API 測試 (requests + Pydantic schema) | [day05-api-basics](notes/day05-api-basics.md) | ✅ |
 | 6 | API 框架化 + 認證 + MQTT 概念 | [day06-api-advanced](notes/day06-api-advanced.md) | ⬜ |
 | 7 | 框架設計 (設定管理, logging, 報告) | [day07-framework-design](notes/day07-framework-design.md) | ⬜ |
 | 8 | 測試金字塔 + DB 驗證 | [day08-test-strategy-db](notes/day08-test-strategy-db.md) | ⬜ |

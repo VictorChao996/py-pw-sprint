@@ -4,10 +4,10 @@
 
 ## 學習目標
 
-- [ ] 使用 `requests` / `httpx` 發送 HTTP 請求
-- [ ] 驗證 status code、headers、response body
-- [ ] 使用 Pydantic 進行 JSON schema 驗證
-- [ ] 理解 REST API 測試的常見模式
+- [x] 使用 `requests` / `httpx` 發送 HTTP 請求
+- [x] 驗證 status code、headers、response body
+- [x] 使用 Pydantic 進行 JSON schema 驗證
+- [x] 理解 REST API 測試的常見模式
 
 ## 核心知識點
 
@@ -129,6 +129,7 @@ def test_response_headers():
 
 ### 5.4 使用 Playwright 的 API Testing 功能（替代 requests）
 
+1. 沒有瀏覽器的範例 （獨立 HTTP client, 沒有 cookie, 沒有 session）
 ```python
 def test_api_with_playwright(playwright):
     """Playwright 也可以做 API 測試，不需要啟動瀏覽器"""
@@ -141,6 +142,21 @@ def test_api_with_playwright(playwright):
     assert response.json()["id"] == 1
 
     api_context.dispose()
+```
+
+2. 共用 page 的瀏覽器 context (自動帶上該 page 的 cookie, session, auth token)
+> **適用場景**：當 API 和 UI 測試混在一起，需要共用瀏覽器登入 session 時特別有用：
+
+```python
+def test_user_flow(page):
+    # UI 登入
+    page.goto("/login")
+    page.fill("#email", "user@test.com")
+    page.click("button[type=submit]")
+
+    # 用同一個已登入的 context 打 API，不需要另外處理 token
+    response = page.request.get("/api/profile")
+    assert response.json()["email"] == "user@test.com"
 ```
 
 ## 實作練習
@@ -160,3 +176,12 @@ def test_api_with_playwright(playwright):
 pytest tests/api/test_day5_api_basics.py -v  # 全部 PASSED
 pytest tests/api/ -v  # 包含 schema 驗證的測試也通過
 ```
+
+## 今日重點
+- Python 進行 RESTful API 測試可以借助 requests/httpx 等 HTTP client package
+  - RESTful 是一種 API 風格, 包含：GET, POST, PUT, DELETE 等操作動作
+  - request header + body, response header + body 都可以作為驗證的重點
+- Pydantic 是一個協助資料驗證的 Package
+  - 能夠驗證 data type, 當不符時拋出 validateError
+  - 型別定義在 API 的 request/response 皆有用處, 更進一步 fastAPI 也有內兼容 pydantic 進行驗證 & swagger API 的呈現
+- API 測試、request 邏輯可以與 schema 分離, 就如 service 開發中 model & controller 分離一樣 （資料結構 & 業務邏輯分離）
