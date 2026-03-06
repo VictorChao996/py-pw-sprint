@@ -2,6 +2,7 @@
 import pytest
 
 from utils.pricing import build_order
+from utils.api_client import APIClient
 
 
 @pytest.fixture(scope="session")
@@ -47,3 +48,18 @@ def order(sample_cart):
     o = build_order(items=sample_cart,role="vip", region="asia")
     yield o
     print("[Teardown] 訂單銷毀")
+
+
+@pytest.fixture(scope="session")
+def json_place_holder_api_client():
+    """Json Place Holder 網站 API Client 封裝"""
+    client = APIClient(base_url="https://jsonplaceholder.typicode.com")
+
+    # 以下模擬一個假的登入取 token & 設定流程
+    # 設定完畢後此 client 的任意請求都包含 token
+    # res = client.post("/auth/login", json={"username":"aaa", "password": "bbb"})
+    # token = res.json()["token"]
+    # client.set_auth_token(token)
+
+    yield client
+    client.close()

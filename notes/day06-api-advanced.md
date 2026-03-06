@@ -4,10 +4,9 @@
 
 ## 學習目標
 
-- [ ] 建立 API client wrapper，統一管理請求
-- [ ] 處理 Token-based 認證流程
-- [ ] 實作資料驅動的 API 測試
-- [ ] 了解 MQTT 基本概念（加分項）
+- [x] 建立 API client wrapper，統一管理請求
+- [x] 處理 Token-based 認證流程
+- [x] 實作資料驅動的 API 測試
 
 ## 核心知識點
 
@@ -112,32 +111,6 @@ def test_create_post_data_driven(api_client, test_data):
     assert response.status_code == test_data["expected_status"]
 ```
 
-### 6.4 MQTT 概念簡介（IoT / 網路產品常見）
-
-```
-MQTT 是物聯網（IoT）常用的輕量級訊息協定：
-- Publish/Subscribe 模式（非 Request/Response）
-- 常用於網路設備（router, mesh networking）的狀態回報
-- Python 套件：paho-mqtt
-- 在 mesh networking 產品中很可能會用到
-
-# 基本概念：
-# Publisher → Broker (e.g., Mosquitto) → Subscriber
-# Topic 格式: "devices/router-01/status"
-```
-
-```python
-# 了解即可，面試時能提到加分
-# pip install paho-mqtt
-
-# import paho.mqtt.client as mqtt
-#
-# client = mqtt.Client()
-# client.connect("test.mosquitto.org", 1883, 60)
-# client.subscribe("test/topic")
-# client.publish("test/topic", "Hello MQTT!")
-```
-
 ## 實作練習
 
 > **練習 6**：
@@ -151,3 +124,8 @@ MQTT 是物聯網（IoT）常用的輕量級訊息協定：
 ```bash
 pytest tests/api/ -v  # 所有 API 測試通過，且使用 APIClient fixture
 ```
+
+## 今日重點
+- API 請求 & 測試時可以建立可複用的 API 測試框架來共同定義處理認證、logging 等 method
+  - 統一管理的好處是當今天有設定 (ex. base url)變更時可以只修改複用的 Wrapper 及可 (而不用一一改動每個 request)
+  - 更近一步的搭配設定檔分離, 能夠讓 wrapper 設定更加動態
